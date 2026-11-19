@@ -1,0 +1,760 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Prompt Engineering Masterclass | Jesse Isa</title>
+<meta name="description" content="A practical beginner-friendly guide to writing better AI prompts and building useful workflows.">
+
+<style>
+:root {
+  --pine:#102f28;
+  --pine2:#09221e;
+  --cream:#f7f5ee;
+  --white:#fffefa;
+  --ink:#18241f;
+  --muted:#66716a;
+  --rule:#d9ded5;
+  --sage:#dce8d8;
+  --gold:#c6a45b;
+  --green:#315f4c;
+}
+
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+}
+
+.wrap {
+  width:min(1160px,91%);
+  margin:auto;
+}
+
+header {
+  background:var(--pine2);
+  color:#fff;
+  border-bottom:1px solid #ffffff24;
+  padding:18px 0;
+}
+
+.nav {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+
+.brand {
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+
+.nav nav {
+  display:flex;
+  gap:28px;
+}
+
+.nav a {
+  font-size:12px;
+  letter-spacing:.04em;
+  color:#e0e8e1;
+  text-decoration:none;
+}
+
+.nav a:hover { color:var(--sage); }
+
+.hero {
+  background:var(--pine2);
+  color:#fff;
+  padding:92px 0 88px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero:after {
+  content:"";
+  position:absolute;
+  right:-160px;
+  top:-250px;
+  width:650px;
+  height:650px;
+  border:1px solid #dce8d81c;
+  border-radius:50%;
+  box-shadow:0 0 0 65px #dce8d809,0 0 0 130px #dce8d806;
+  pointer-events:none;
+}
+
+.hero-grid {
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:minmax(0,820px) 1fr;
+  gap:30px;
+}
+
+.hero-empty { min-height:1px; }
+
+.eyebrow,.tag {
+  display:inline-block;
+  color:#c8d9bf;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.eyebrow {
+  border-top:1px solid #a8c39d;
+  border-bottom:1px solid #a8c39d;
+  padding:8px 0;
+}
+
+.hero h1 {
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(48px,7vw,82px);
+  line-height:.96;
+  font-weight:500;
+  letter-spacing:-.055em;
+  margin:26px 0 22px;
+  max-width:800px;
+}
+
+.hero h1 span {
+  color:#c6d9b9;
+  font-style:italic;
+}
+
+.lead {
+  font-family:Georgia,serif;
+  font-size:23px;
+  line-height:1.35;
+  max-width:650px;
+  color:var(--cream);
+}
+
+.muted-light {
+  max-width:650px;
+  color:#c7d2ca;
+  font-size:15px;
+  line-height:1.85;
+}
+
+.cta {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  background:#d8e5cf;
+  color:#102d25;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  padding:18px 25px;
+  margin:22px 0 12px;
+  border:1px solid #d8e5cf;
+  border-radius:2px;
+  transition:.2s;
+}
+
+.cta:hover {
+  background:#fffefa;
+  border-color:#fffefa;
+  transform:translateY(-2px);
+}
+
+.micro {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  color:#bdc9c0;
+  font-size:11px;
+  letter-spacing:.03em;
+}
+
+.trustbar {
+  background:#fffefa;
+  border-bottom:1px solid var(--rule);
+}
+
+.trustitems {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  padding:19px 0;
+}
+
+.trustitems div {
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:var(--green);
+  padding:4px 12px;
+  border-right:1px solid var(--rule);
+}
+
+.trustitems div:last-child { border:0; }
+
+.section { padding:82px 0; }
+
+.section h2 {
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:500;
+  font-size:clamp(32px,4.3vw,48px);
+  line-height:1.08;
+  letter-spacing:-.04em;
+  color:var(--pine);
+  margin:12px 0 20px;
+}
+
+.intro {
+  font-size:15px;
+  line-height:1.9;
+  color:var(--muted);
+  max-width:700px;
+}
+
+.section p { max-width:700px; }
+
+.split {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:72px;
+  align-items:start;
+}
+
+.section-lead {
+  font-family:Georgia,serif;
+  font-size:21px;
+  line-height:1.55;
+  color:var(--pine);
+}
+
+.panel {
+  background:#edf1e9;
+  border:1px solid #dbe3d7;
+  padding:34px 36px;
+  position:relative;
+}
+
+.panel:before {
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:58px;
+  height:3px;
+  background:var(--gold);
+}
+
+.panel h2 {
+  font-size:31px;
+  margin-top:3px;
+}
+
+.checks {
+  list-style:none;
+  padding:0;
+  margin:24px 0 0;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.checks li {
+  margin:13px 0;
+  padding-left:25px;
+  position:relative;
+}
+
+.checks li:before {
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:var(--green);
+  font-weight:900;
+}
+
+.soft-section {
+  background:#fffefa;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+
+.cards {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  margin-top:36px;
+  border-top:1px solid var(--rule);
+  border-left:1px solid var(--rule);
+}
+
+.card {
+  min-height:178px;
+  padding:26px 25px;
+  background:transparent;
+  border:0;
+  border-right:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+
+.card h3 {
+  font:700 15px/1.4 Arial,sans-serif;
+  color:var(--pine);
+  margin:13px 0 8px;
+}
+
+.card p {
+  font-size:13px;
+  line-height:1.7;
+  color:var(--muted);
+  margin:0;
+}
+
+.audience {
+  background:#e9eee6;
+  border-top:1px solid #dbe2d8;
+  border-bottom:1px solid #dbe2d8;
+}
+
+.aud-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:30px;
+}
+
+.aud-grid div {
+  background:#f9faf6;
+  border:1px solid #dce4d9;
+  padding:19px 20px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--pine);
+}
+
+.creator {
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:30px;
+  align-items:center;
+  padding:38px 0;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+
+.initials {
+  width:104px;
+  height:104px;
+  border:1px solid #aabda7;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--pine);
+  color:#f5f4ed;
+  font:italic 32px Georgia,serif;
+}
+
+.creator h2 {
+  font-size:37px;
+  margin:6px 0 9px;
+}
+
+.creator p {
+  max-width:750px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.85;
+  margin:0;
+}
+
+.offer {
+  background:var(--pine2);
+  color:#fff;
+  padding:54px;
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:48px;
+  align-items:center;
+  border-left:5px solid var(--gold);
+}
+
+.offer h2 {
+  font:500 clamp(32px,4vw,46px)/1.08 Georgia,serif;
+  color:#fff;
+  margin:13px 0 17px;
+  letter-spacing:-.04em;
+}
+
+.offer p {
+  font-size:14px;
+  line-height:1.8;
+  color:#c8d4cc;
+}
+
+.price {
+  font:500 68px/1 Georgia,serif;
+  letter-spacing:-.05em;
+  color:#d5e4cb;
+  margin:21px 0;
+}
+
+.offer ul {
+  padding:0;
+  list-style:none;
+  margin:0;
+  font-size:13px;
+  color:#e1e9e2;
+}
+
+.offer li {
+  padding:10px 0;
+  border-bottom:1px solid #ffffff20;
+}
+
+.offer li:before {
+  content:"✓";
+  color:#c6d9b9;
+  margin-right:12px;
+  font-weight:bold;
+}
+
+.faq-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 44px;
+  margin-top:28px;
+}
+
+.faq {
+  padding:21px 0;
+  border-top:1px solid var(--rule);
+}
+
+.faq h3 {
+  font-size:14px;
+  color:var(--pine);
+  margin:0 0 7px;
+}
+
+.faq p {
+  font-size:13px;
+  line-height:1.75;
+  color:var(--muted);
+  margin:0;
+}
+
+.final {
+  background:var(--pine);
+  color:white;
+  text-align:center;
+  padding:72px 0;
+}
+
+.final h2 {
+  font:500 clamp(34px,4.6vw,50px)/1.1 Georgia,serif;
+  color:#fff;
+  margin:0 0 16px;
+}
+
+.final h2 span {
+  color:#d0dfc5;
+  font-style:italic;
+}
+
+.final p {
+  font-size:14px;
+  line-height:1.8;
+  color:#d4ded6;
+  max-width:650px;
+  margin:auto;
+}
+
+footer {
+  background:#071a17;
+  color:#aebdb2;
+  text-align:center;
+  padding:23px;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+@media(max-width:760px) {
+  .hero { padding:64px 0; }
+  .hero-grid,.split,.offer { grid-template-columns:1fr; }
+  .hero-empty { display:none; }
+  .nav nav { display:none; }
+  .section { padding:58px 0; }
+  .cards { grid-template-columns:1fr 1fr; }
+  .aud-grid { grid-template-columns:1fr 1fr; }
+  .offer { padding:32px; gap:22px; }
+  .creator { grid-template-columns:1fr; text-align:center; }
+  .initials { margin:auto; }
+  .trustitems { grid-template-columns:1fr; gap:10px; }
+  .trustitems div { border:0; }
+}
+
+@media(max-width:480px) {
+  .cards,.aud-grid,.faq-grid { grid-template-columns:1fr; }
+  .hero h1 { font-size:48px; }
+  .cta { width:100%; text-align:center; }
+  .section { padding:48px 0; }
+  .panel { padding:25px; }
+  .micro { line-height:1.8; }
+  .offer { padding:25px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">✳ AI PROMPT ENGINEERING MASTERCLASS</div>
+    <nav>
+      <a href="#learn">What you'll learn</a>
+      <a href="#inside">What's included</a>
+      <a href="#offer">Get access</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">THE PRACTICAL GUIDE TO BETTER AI RESULTS</span>
+      <h1>AI Prompt<br>Engineering<br><span>Masterclass</span></h1>
+      <p class="lead">Stop guessing what to tell AI. Start getting results.</p>
+      <p class="muted-light">
+        Learn how to communicate with AI, write more effective prompts,
+        improve your results, and build practical AI-powered workflows —
+        even if you're a complete beginner.
+      </p>
+      <a class="cta" href="https://selar.com/88659zs581?quickcheckout=1">
+        GET INSTANT ACCESS FOR ₦7,000 →
+      </a>
+      <div class="micro">Instant digital access · PDF guide · One-time payment</div>
+    </div>
+    <div class="hero-empty" aria-hidden="true"></div>
+  </div>
+</section>
+
+<div class="trustbar">
+  <div class="wrap trustitems">
+    <div>12 Structured Chapters</div>
+    <div>Practical Prompt Templates</div>
+    <div>One-Time Digital Purchase</div>
+  </div>
+</div>
+
+<section class="section" id="learn">
+  <div class="wrap split">
+    <div>
+      <span class="tag">WHY THIS MATTERS</span>
+      <h2>A practical skill for the way work is changing.</h2>
+      <p class="intro">
+        AI can help with research, content, planning, business tasks and
+        productivity. But the quality of the result often depends on the
+        clarity of the instructions you give it.
+      </p>
+      <p>
+        Learn a repeatable way to give AI context, define the task,
+        set boundaries and shape the output you need.
+      </p>
+      <a class="cta" href="https://selar.com/88659zs581?quickcheckout=1">
+        START LEARNING TODAY →
+      </a>
+    </div>
+
+    <div class="panel">
+      <h2>What You Will Learn</h2>
+      <ul class="checks">
+        <li><b>Understand AI:</b> how generative AI responds to instructions.</li>
+        <li><b>Write better prompts:</b> the structure of effective prompts.</li>
+        <li><b>Give clear instructions:</b> context, roles, objectives and constraints.</li>
+        <li><b>Guide the output:</b> get responses in useful formats.</li>
+        <li><b>Apply AI to business:</b> marketing, operations and productivity.</li>
+        <li><b>Improve results:</b> test, refine and evaluate prompts.</li>
+        <li><b>Build reusable systems:</b> repeatable prompts and assistant instructions.</li>
+        <li><b>Use AI responsibly:</b> accuracy, privacy and human review.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="inside" style="background:#f7faf9">
+  <div class="wrap">
+    <span class="tag">YOUR DIGITAL RESOURCE</span>
+    <h2>What You Get Inside</h2>
+    <p class="intro">
+      A structured learning resource designed to help you move from
+      the basics to practical use.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>📘 12-Chapter Learning Guide</h3>
+        <p>A step-by-step introduction to prompt engineering, from fundamentals to practical applications.</p>
+      </div>
+      <div class="card">
+        <h3>✍️ Copy-Ready Prompt Library</h3>
+        <p>Adaptable templates for business, marketing, research, content, customer service and more.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ 30 Practical AI Workflow Ideas</h3>
+        <p>Explore ways to apply AI to everyday business and productivity tasks.</p>
+      </div>
+      <div class="card">
+        <h3>🗓️ 30-Day Practice Plan</h3>
+        <p>A structured schedule to practise your skills and build confidence.</p>
+      </div>
+      <div class="card">
+        <h3>📈 Prompt Improvement Log</h3>
+        <p>Track your experiments, evaluate outputs and refine your prompts.</p>
+      </div>
+      <div class="card">
+        <h3>✓ Final Assessment & Glossary</h3>
+        <p>Review what you've learned and become familiar with key terms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section audience">
+  <div class="wrap">
+    <span class="tag">BUILT FOR PRACTICAL LEARNING</span>
+    <h2>Who Is This Masterclass For?</h2>
+    <div class="aud-grid">
+      <div>✓ Entrepreneurs and business owners</div>
+      <div>✓ Freelancers and digital marketers</div>
+      <div>✓ Content creators and social media managers</div>
+      <div>✓ Students and professionals</div>
+      <div>✓ People who want to work more productively with AI</div>
+      <div>✓ Beginners seeking a structured introduction</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="creator">
+      <div class="initials">JI</div>
+      <div>
+        <span class="tag">CREATED BY</span>
+        <h2>Jesse Isa</h2>
+        <p class="intro">
+          Created by Jesse Isa, this masterclass is organised to help
+          learners understand prompt engineering and apply it to real tasks.
+          Work through the fundamentals, practise with adaptable examples,
+          and build a more deliberate approach to using AI.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="offer">
+  <div class="wrap">
+    <div class="offer">
+      <div>
+        <span class="tag">ONE-TIME PAYMENT · DIGITAL PDF</span>
+        <h2>Get the AI Prompt Engineering Masterclass</h2>
+        <p>
+          Build a clearer, more repeatable approach to working with AI —
+          with a practical guide you can revisit as you learn.
+        </p>
+        <div class="price">₦7,000</div>
+        <a class="cta" href="https://selar.com/88659zs581?quickcheckout=1">
+          GET INSTANT ACCESS FOR ₦7,000 →
+        </a>
+        <p style="font-size:12px;color:#c4d7d0">
+          Digital PDF product. No physical delivery.
+          No recurring subscription for this PDF.
+        </p>
+      </div>
+
+      <div>
+        <b>Included in your guide:</b>
+        <ul>
+          <li>12 structured learning chapters</li>
+          <li>Copy-ready prompt library</li>
+          <li>30 practical AI workflow ideas</li>
+          <li>30-day practice plan</li>
+          <li>Prompt improvement log</li>
+          <li>Final assessment and glossary</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="checkout" style="text-align:center;padding:20px;color:#667">
+      Secure payment and instant digital delivery are handled by Selar.
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <span class="tag">NEED TO KNOW?</span>
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-grid">
+      <div class="faq">
+        <h3>Do I need previous AI experience?</h3>
+        <p>No. The guide starts with the fundamentals and builds towards practical applications.</p>
+      </div>
+      <div class="faq">
+        <h3>Is this only for programmers?</h3>
+        <p>No. It is for people interested in using AI for business, content, research and productivity. Programming experience is not required.</p>
+      </div>
+      <div class="faq">
+        <h3>Will I receive a physical book?</h3>
+        <p>No. This is a digital PDF product.</p>
+      </div>
+      <div class="faq">
+        <h3>Can I use the prompts with different AI tools?</h3>
+        <p>The principles and templates are designed to be adaptable to compatible AI assistants. Results may vary between tools.</p>
+      </div>
+      <div class="faq">
+        <h3>Does this guarantee perfect AI answers?</h3>
+        <p>No. AI can make mistakes. The guide covers accuracy checks, responsible use and human review.</p>
+      </div>
+      <div class="faq">
+        <h3>How do I get started?</h3>
+        <p>Complete your purchase, access your digital PDF and begin with Chapter One.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Better Prompts. <span>Bigger Possibilities.</span></h2>
+    <p>
+      Learn to communicate with AI more clearly, work more systematically
+      and make better use of the tools available to you.
+    </p>
+    <a class="cta" href="https://selar.com/88659zs581?quickcheckout=1">
+      GET INSTANT ACCESS FOR ₦7,000 →
+    </a>
+  </div>
+</section>
+
+<footer>
+  © 2026 AI Prompt Engineering Masterclass · Created by Jesse Isa
+</footer>
+
+</body>
+</html>
